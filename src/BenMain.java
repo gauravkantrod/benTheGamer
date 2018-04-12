@@ -5,10 +5,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Scanner;
 import java.util.Set;
-import java.util.TreeSet;
 
 public class BenMain {
-
 	public static void main(String[] args) {
 
 		Scanner sc = new Scanner(System.in);
@@ -28,9 +26,13 @@ public class BenMain {
 		for (int i = 0; i < nLevels; i++) {
 			System.out.println("Enter weapon " + i + "-->  ");
 			String s = sc.next();
-			// if (s.length() == mWeapons) {
-			weaponType.add(s);
-			// }
+			Boolean match = s.matches("[01]*");
+			if (match == true && s.length() == mWeapons && weaponType.add(s)) {
+				weaponType.add(s);
+			} else {
+				System.out.println(0);
+				return;
+			}
 		}
 		System.out
 				.println("Ans --> " + minCoins(nLevels, mWeapons, weaponType));
@@ -40,10 +42,10 @@ public class BenMain {
 		int coins = 0;
 		if (nLevels >= 1 && nLevels <= 20 && mWeapons >= 1 && mWeapons <= 20) {
 			Set<Integer> result = new HashSet<Integer>();
-			Set<Set<Integer>> set = new HashSet<Set<Integer>>();
+			List<List<Integer>> set = new ArrayList<List<Integer>>();
 
 			for (String s : weaponType) {
-				Set<Integer> wepSet = new TreeSet<Integer>();
+				List<Integer> wepSet = new ArrayList<Integer>();
 				char[] c = s.toCharArray();
 				for (int i = 0; i < c.length; i++) {
 					if (c[i] == '1') {
@@ -53,27 +55,25 @@ public class BenMain {
 				set.add(wepSet);
 			}
 
-			List<Set<Integer>> ltr = new ArrayList<Set<Integer>>();
-			for (Set<Integer> s : set) {
+			List<List<Integer>> ltr = new ArrayList<List<Integer>>();
+			for (List<Integer> s : set) {
 				ltr.add(s);
 			}
 			Collections.sort(ltr, new SizeComparator());
+			System.out.println("list--->"+ltr);
 
-			for (Set<Integer> s : ltr) {
+			for (List<Integer> s : ltr) {
 				coins += symmetricDifference(s, result);
 			}
 		}
 		return coins;
 	}
 
-	private static int symmetricDifference(Set<Integer> b, Set<Integer> result) {
+	private static int symmetricDifference(List<Integer> b, Set<Integer> result) {
 		int prevResultSize = result.size();
 		for (Integer element : b) {
-			if (!result.add(element)) {
-				result.remove(element);
-			}
+			result.add(element);
 		}
-		result.addAll(b);
 		int nextResultSize = result.size();
 		int diff = nextResultSize - prevResultSize;
 		int square = diff * diff;
@@ -81,12 +81,11 @@ public class BenMain {
 		return square;
 	}
 
-	public static class SizeComparator implements Comparator<Set<?>> {
-
+	public static class SizeComparator implements Comparator<List<?>> {
 		@Override
-		public int compare(Set<?> o1, Set<?> o2) {
+		public int compare(List<?> o1, List<?> o2) {
 			return Integer.valueOf(o1.size()).compareTo(o2.size());
 		}
 	}
-	
+
 }
