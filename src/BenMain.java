@@ -60,7 +60,7 @@ public class BenMain {
 				ltr.add(s);
 			}
 			Collections.sort(ltr, new SizeComparator());
-			System.out.println("list--->"+ltr);
+			System.out.println("list--->" + ltr);
 
 			for (List<Integer> s : ltr) {
 				coins += symmetricDifference(s, result);
